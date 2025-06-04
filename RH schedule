@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>نموذج ترتيب الجدول - جامعة حائل</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      direction: rtl;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    label, select, input, button {
+      display: block;
+      margin: 10px 0;
+    }
+    .course-section {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+    .section-time {
+      margin-right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>تنظيم الجدول الدراسي - كلية التمريض</h2>
+  <label for="level">اختر المستوى الدراسي:</label>
+  <select id="level" onchange="showCourses()">
+    <option value="">-- اختر --</option>
+    <option value="3">المستوى الثالث</option>
+    <option value="4">المستوى الرابع</option>
+    <option value="5">المستوى الخامس</option>
+    <option value="6">المستوى السادس</option>
+    <option value="7">المستوى السابع</option>
+  </select>
+
+  <label for="off-day">اختر يوم الإجازة المفضل (اختياري):</label>
+  <select id="off-day">
+    <option value="">بدون</option>
+    <option value="الاحد">الأحد</option>
+    <option value="الاثنين">الاثنين</option>
+    <option value="الثلاثاء">الثلاثاء</option>
+    <option value="الأربعاء">الأربعاء</option>
+    <option value="الخميس">الخميس</option>
+  </select>
+
+  <div id="courses"></div>
+
+  <button onclick="generateSchedule()">تنظيم الجدول</button>
+
+  <script>
+    const coursesByLevel = {
+      3: [
+        { code: 'ANT-214', name: 'علم التشريح', units: 3 },
+        { code: 'BOCH-215', name: 'الكيمياء الحيوية', units: 2 },
+        { code: 'NUR-211', name: 'أساسيات التمريض نظري', units: 3 },
+        { code: 'NUR-212', name: 'أساسيات التمريض عملي', units: 3 },
+        { code: 'NUR-213', name: 'التقييم الصحي نظري', units: 2 },
+        { code: 'NUR-214', name: 'التقييم الصحي عملي', units: 2 },
+        { code: 'PHYL-213', name: 'علم وظائف الأعضاء', units: 3 }
+      ],
+      4: [
+        { code: 'MIBO-227', name: 'علم الأحياء الدقيقة', units: 2 },
+        { code: 'NUR-225', name: 'تمريض صحة البالغين 1 نظري', units: 4 },
+        { code: 'NUR-226', name: 'تمريض صحة البالغين 1 عملي', units: 6 },
+        { code: 'PATH-228', name: 'الفيسيولوجيا المرضية', units: 2 },
+        { code: 'PHRM-226', name: 'علم الأدوية للتمريض', units: 3 }
+      ],
+      5: [
+        { code: 'NUR-425', name: 'رعاية الحالات الحادة نظري', units: 4 },
+        { code: 'NUR-426', name: 'رعاية الحالات الحادة عملي', units: 3 },
+        { code: 'NUR-427', name: 'تمريض صحة المجتمع نظري', units: 3 },
+        { code: 'NUR-428', name: 'تمريض صحة المجتمع عملي', units: 3 }
+      ],
+      6: [
+        { code: 'NUR-325', name: 'تمريض الأطفال نظري', units: 3 },
+        { code: 'NUR-326', name: 'تمريض الأطفال عملي', units: 3 },
+        { code: 'NUR-327', name: 'النمو والتطور', units: 2 },
+        { code: 'NUR-328', name: 'مقدمة في أبحاث التمريض', units: 3 },
+        { code: 'NUTR-323', name: 'التغذية البشرية', units: 2 },
+        { code: 'SOCI-324', name: 'علم الاجتماع للتمريض', units: 1 }
+      ],
+      7: [
+        { code: 'NUR-411', name: 'تمريض الصحة النفسية نظري', units: 3 },
+        { code: 'NUR-412', name: 'تمريض الصحة النفسية عملي', units: 3 },
+        { code: 'NUR-413', name: 'القضايا القانونية والأخلاقية', units: 2 },
+        { code: 'NUR-414', name: 'القيادة والإدارة في التمريض', units: 2 },
+        { code: 'NUR-415', name: 'التثقيف والارتقاء الصحي', units: 2 },
+        { code: 'NUR-416', name: 'المعلوماتية الصحية', units: 2 }
+      ]
+    };
+
+    function showCourses() {
+      const level = document.getElementById('level').value;
+      const courseDiv = document.getElementById('courses');
+      courseDiv.innerHTML = '';
+      if (!level || !coursesByLevel[level]) return;
+      coursesByLevel[level].forEach(course => {
+        const courseSection = document.createElement('div');
+        courseSection.className = 'course-section';
+        courseSection.innerHTML = `
+          <strong>${course.code} - ${course.name}</strong> (${course.units} ساعات)<br>
+          <label>أدخل معلومات الشعب (اليوم + الوقت):</label>
+          <input type="text" placeholder="مثال: أحد - ثلاثاء 8:00-9:30">
+        `;
+        courseDiv.appendChild(courseSection);
+      });
+    }
+
+    function generateSchedule() {
+      alert('تم استلام البيانات! سيتم بناء الجدول في الخطوة التالية.');
+    }
+  </script>
+</body>
+</html>
